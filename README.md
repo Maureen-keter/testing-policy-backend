@@ -1,7 +1,3 @@
-Here’s a sample README file template you can use for your backend. Replace placeholders with details specific to your project.
-
----
-
 # Insurance Policy Management System - Backend
 
 This is the backend for the **Insurance Policy Management System**, designed to handle API requests, database operations, and business logic for managing insurance policies. The backend is built with **Python** and **Flask**, with data persistence handled via **SQLite** (or your chosen database).
