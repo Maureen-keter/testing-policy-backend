@@ -59,3 +59,22 @@ class Policies(Resource):
             db.session.rollback()
             return make_response(jsonify({"error": str(e)}), 400)
 
+# Resource for handling a single policy by ID
+class PolicyByID(Resource):
+    def get(self, id):
+        # Fetch a policy by ID
+        policy = Policy.query.filter_by(id=id).first()
+        if not policy:
+            return make_response(jsonify({"error": "Policy not found"}), 404)
+
+        policy_dict = {
+            "id": policy.id,
+            "policy_name": policy.policy_name,
+            "policy_holder": policy.policy_holder,
+            "premium_amount": policy.premium_amount,
+            "start_date": policy.start_date,
+            "end_date": policy.end_date,
+        }
+        return make_response(jsonify(policy_dict), 200)
+
+    
