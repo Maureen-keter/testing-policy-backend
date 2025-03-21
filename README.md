@@ -56,9 +56,8 @@ This is the backend for the **Insurance Policy Management System**, designed to 
 | GET         | `/api/policies`  | Fetch all insurance policies     
 | GET         | `/api/policies/:id` | Fetch a single policy by ID      
 | POST        | `/api/policies`  | Create a new insurance policy    
-| PUT         | `/api/policies/:id` | Update an existing policy        
-| DELETE      | `/api/policies/:id` | Delete an insurance policy                                                            
-
+| PATCH        | `/api/policies/:id` | Update an existing policy        
+| DELETE      | `/api/policies/:id` | Delete an insurance policy
 ---
 
 ## Folder Structure
@@ -66,7 +65,6 @@ This is the backend for the **Insurance Policy Management System**, designed to 
 ```
 insurance-management-backend/
 ├── src/
-│   ├── controllers/     # Business logic for API endpoints
 │   ├── models/          # Database schemas (e.g., Policy model)
 │   ├── routes/          # API route definitions
 │   ├── server.js        # Main server file
