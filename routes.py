@@ -3,27 +3,6 @@ from flask import jsonify, request, make_response
 from flask_restful import Resource
 
 
-class Policies(Resource):
-    def get(self):
-        # Fetch all policies
-        policies_list = []
-        for policy in Policy.query.all():
-            policy_dict = {
-                "id": policy.id,
-                "policy_name": policy.policy_name,
-                "policy_holder": policy.policy_holder,
-                "premium_amount": policy.premium_amount,
-                "start_date": policy.start_date,
-                "end_date": policy.end_date,
-            }
-            policies_list.append(policy_dict)
-        return make_response(jsonify(policies_list), 200)
-    
-
-    from models import Policy, db
-from flask import jsonify, request, make_response
-from flask_restful import Resource
-
 # Resource for handling all policies
 class Policies(Resource):
     def get(self):
@@ -32,11 +11,10 @@ class Policies(Resource):
         for policy in Policy.query.all():
             policy_dict = {
                 "id": policy.id,
-                "policy_name": policy.policy_name,
-                "policy_holder": policy.policy_holder,
-                "premium_amount": policy.premium_amount,
-                "start_date": policy.start_date,
-                "end_date": policy.end_date,
+                "name": policy.name,
+                "type": policy.type,
+                "premium": policy.premium,
+                "status": policy.status,
             }
             policies_list.append(policy_dict)
         return make_response(jsonify(policies_list), 200)
@@ -46,18 +24,18 @@ class Policies(Resource):
         data = request.get_json()
         try:
             new_policy = Policy(
-                policy_name=data["policy_name"],
-                policy_holder=data["policy_holder"],
-                premium_amount=data["premium_amount"],
-                start_date=data["start_date"],
-                end_date=data["end_date"],
+                name=data["name"],
+                type=data["type"],
+                premium=data["premium"],
+                status=data.get("status", "active"),  # Default to "active" if not provided
             )
             db.session.add(new_policy)
             db.session.commit()
-            return make_response(jsonify(["Policy added successfully"]), 201)
+            return make_response(jsonify({"message": "Policy added successfully"}), 201)
         except Exception as e:
             db.session.rollback()
             return make_response(jsonify({"error": str(e)}), 400)
+
 
 # Resource for handling a single policy by ID
 class PolicyByID(Resource):
@@ -69,39 +47,33 @@ class PolicyByID(Resource):
 
         policy_dict = {
             "id": policy.id,
-            "policy_name": policy.policy_name,
-            "policy_holder": policy.policy_holder,
-            "premium_amount": policy.premium_amount,
-            "start_date": policy.start_date,
-            "end_date": policy.end_date,
+            "name": policy.name,
+            "type": policy.type,
+            "premium": policy.premium,
+            "status": policy.status,
         }
         return make_response(jsonify(policy_dict), 200)
 
-
     def patch(self, id):
-            # Update a policy
-            policy = Policy.query.filter_by(id=id).first()
-            if not policy:
-                return make_response(jsonify({"error": "Policy not found"}), 404)
+        # Update a policy
+        policy = Policy.query.filter_by(id=id).first()
+        if not policy:
+            return make_response(jsonify({"error": "Policy not found"}), 404)
 
-            data = request.json
-            for field in ["policy_name", "policy_holder", "premium_amount", "start_date", "end_date"]:
-                if field in data:
-                    setattr(policy, field, data[field])
+        data = request.json
+        for field in ["name", "type", "premium", "status"]:
+            if field in data:
+                setattr(policy, field, data[field])
 
-            db.session.commit()
-            return make_response(jsonify(["Policy updated successfully"]), 200)
-    
+        db.session.commit()
+        return make_response(jsonify({"message": "Policy updated successfully"}), 200)
+
     def delete(self, id):
-            # Delete a policy
-            policy = Policy.query.filter_by(id=id).first()
-            if not policy:
-                return make_response(jsonify({"error": "Policy not found"}), 404)
+        # Delete a policy
+        policy = Policy.query.filter_by(id=id).first()
+        if not policy:
+            return make_response(jsonify({"error": "Policy not found"}), 404)
 
-            db.session.delete(policy)
-            db.session.commit()
-            return make_response(jsonify(["Policy deleted successfully"]), 200)
-
-
-
-       
+        db.session.delete(policy)
+        db.session.commit()
+        return make_response(jsonify({"message": "Policy deleted successfully"}), 200)
