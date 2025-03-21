@@ -91,5 +91,17 @@ class PolicyByID(Resource):
 
             db.session.commit()
             return make_response(jsonify(["Policy updated successfully"]), 200)
+    
+    def delete(self, id):
+            # Delete a policy
+            policy = Policy.query.filter_by(id=id).first()
+            if not policy:
+                return make_response(jsonify({"error": "Policy not found"}), 404)
+
+            db.session.delete(policy)
+            db.session.commit()
+            return make_response(jsonify(["Policy deleted successfully"]), 200)
+
+
 
        
