@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 from flask_migrate import Migrate
-from models import db, policy
+from models import db
 from routes import Policies, PolicyByID
 from flask_restful import Api
+
 
 app=Flask(__name__)
 
