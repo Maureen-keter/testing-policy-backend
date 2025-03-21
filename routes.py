@@ -77,4 +77,19 @@ class PolicyByID(Resource):
         }
         return make_response(jsonify(policy_dict), 200)
 
-    
+
+    def patch(self, id):
+            # Update a policy
+            policy = Policy.query.filter_by(id=id).first()
+            if not policy:
+                return make_response(jsonify({"error": "Policy not found"}), 404)
+
+            data = request.json
+            for field in ["policy_name", "policy_holder", "premium_amount", "start_date", "end_date"]:
+                if field in data:
+                    setattr(policy, field, data[field])
+
+            db.session.commit()
+            return make_response(jsonify(["Policy updated successfully"]), 200)
+
+       
